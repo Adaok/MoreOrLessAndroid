@@ -1,0 +1,224 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+
+    def versionPropsFile = openFileVersion()
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        def versionCodeCreated = getVersionCode(versionProps)
+        def versionNameCreated = getVersionName(versionProps)
+
+        showVersions(versionProps, false)
+
+        defaultConfig {
+            applicationId "io.github.adaok.moreorless"
+            minSdkVersion 19
+            targetSdkVersion 28
+            versionCode versionCodeCreated
+            versionName versionNameCreated
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+
+    } else {
+        throw new GradleException("Could not read version.properties!")
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+task('bumpMajor') <<
+        {
+            def versionPropsFile = openFileVersion()
+            if (versionPropsFile.canRead()) {
+                def Properties versionProps = new Properties()
+
+                versionProps.load(new FileInputStream(versionPropsFile))
+
+                processBumpMajor(versionProps)
+
+                versionProps.store(versionPropsFile.newWriter(), null)
+
+                showVersions(versionProps, true)
+            } else {
+                throw new GradleException("Could not read version.properties!")
+            }
+        }
+
+task('bumpMinor') <<
+        {
+            def versionPropsFile = openFileVersion()
+            if (versionPropsFile.canRead()) {
+                def Properties versionProps = new Properties()
+
+                versionProps.load(new FileInputStream(versionPropsFile))
+
+                processBumpMinor(versionProps)
+
+                versionProps.store(versionPropsFile.newWriter(), null)
+
+                showVersions(versionProps, true)
+            } else {
+                throw new GradleException("Could not read version.properties!")
+            }
+        }
+
+task('bumpPatch') <<
+        {
+            def versionPropsFile = openFileVersion()
+            if (versionPropsFile.canRead()) {
+                def Properties versionProps = new Properties()
+
+                versionProps.load(new FileInputStream(versionPropsFile))
+
+                processBumpPatch(versionProps)
+
+                versionProps.store(versionPropsFile.newWriter(), null)
+
+                showVersions(versionProps, true)
+            } else {
+                throw new GradleException("Could not read version.properties!")
+            }
+        }
+
+task('bumpBuild') <<
+        {
+            def versionPropsFile = openFileVersion()
+            if (versionPropsFile.canRead()) {
+                def Properties versionProps = new Properties()
+
+                versionProps.load(new FileInputStream(versionPropsFile))
+
+                processBumpBuild(versionProps)
+
+                versionProps.store(versionPropsFile.newWriter(), null)
+
+                showVersions(versionProps, true)
+            } else {
+                throw new GradleException("Could not read version.properties!")
+            }
+        }
+
+/**********************\/ Helpers functions **********************/
+def openFileVersion() {
+    return file('version.properties')
+}
+
+def showVersions(versionProps, isNew) {
+    def versionMajor = getMajorVersion(versionProps)
+    def versionMinor = getMinorVersion(versionProps)
+    def versionPatch = getPatchVersion(versionProps)
+
+    def versionCode = getVersionCode(versionProps)
+
+    if (isNew) {
+        println "new version ${versionMajor}.${versionMinor}.${versionPatch}"
+        println "new version code ${versionCode}"
+    } else {
+        println "version ${versionMajor}.${versionMinor}.${versionPatch}"
+        println "version code ${versionCode}"
+    }
+}
+
+/**********************\/ Getter and Setters functions **********************/
+def getMajorVersion(versionProps) {
+    return versionProps['VERSION_MAJOR'].toInteger()
+}
+
+def setMajorVersion(versionProps, value) {
+    versionProps['VERSION_MAJOR'] = value
+}
+
+def getMinorVersion(versionProps) {
+    return versionProps['VERSION_MINOR'].toInteger()
+}
+
+def setMinorVersion(versionProps, value) {
+    versionProps['VERSION_MINOR'] = value
+}
+
+def getPatchVersion(versionProps) {
+    return versionProps['VERSION_PATCH'].toInteger()
+}
+
+def setPatchVersion(versionProps, value) {
+    versionProps['VERSION_PATCH'] = value
+}
+
+def getBuildVersion(versionProps) {
+    return versionProps['VERSION_BUILD'].toInteger()
+}
+
+def setBuildVersion(versionProps, value) {
+    versionProps['VERSION_BUILD'] = value
+}
+
+def getVersionCode(versionProps) {
+    def versionMajor = getMajorVersion(versionProps)
+    def versionMinor = getMinorVersion(versionProps)
+    def versionPatch = getPatchVersion(versionProps)
+    def versionBuild = getBuildVersion(versionProps)
+    return ((versionMajor * 1E7) + (versionMinor * 1E5) + (versionPatch * 1E3) + versionBuild).toInteger()
+}
+
+def getVersionName(versionProps) {
+    return versionProps['VERSION_MAJOR'] + "." + versionProps['VERSION_MINOR'] + "." + versionProps['VERSION_PATCH']
+}
+
+/**********************\/ Processes functions **********************/
+
+def processBumpMajor(versionProps) {
+    def versionMajor = getMajorVersion(versionProps) + 1
+    def versionMinor = 0
+    def versionPatch = 0
+    def versionBuild = 0
+    setVersionsNumbers(versionProps, versionMajor, versionMinor, versionPatch, versionBuild)
+}
+
+def processBumpMinor(versionProps) {
+    def versionMajor = getMajorVersion(versionProps)
+    def versionMinor = getMinorVersion(versionProps) + 1
+    def versionPatch = 0
+    def versionBuild = 0
+    setVersionsNumbers(versionProps, versionMajor, versionMinor, versionPatch, versionBuild)
+}
+
+def processBumpPatch(versionProps) {
+    def versionMajor = getMajorVersion(versionProps)
+    def versionMinor = getMinorVersion(versionProps)
+    def versionPatch = getPatchVersion(versionProps) + 1
+    def versionBuild = 0
+    setVersionsNumbers(versionProps, versionMajor, versionMinor, versionPatch, versionBuild)
+}
+
+def processBumpBuild(versionProps) {
+    def versionMajor = getMajorVersion(versionProps)
+    def versionMinor = getMinorVersion(versionProps)
+    def versionPatch = getPatchVersion(versionProps)
+    def versionBuild = getBuildVersion(versionProps) + 1
+    setVersionsNumbers(versionProps, versionMajor, versionMinor, versionPatch, versionBuild)
+}
+
+def setVersionsNumbers(versionProps, versionMajor, versionMinor, versionPatch, versionBuild) {
+    setMajorVersion(versionProps, versionMajor.toString())
+    setMinorVersion(versionProps, versionMinor.toString())
+    setPatchVersion(versionProps, versionPatch.toString())
+    setBuildVersion(versionProps, versionBuild.toString())
+}

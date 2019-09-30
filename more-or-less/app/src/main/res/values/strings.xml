@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">More Or Less</string>
+    <string name="tv_more">More</string>
+    <string name="tv_less">Less</string>
+    <string name="tv_good_result">You win in %1$d moves.</string>
+    <string name="toast_retry">Please retry !</string>
+    <string name="text_try_again">Try again !</string>
+    <string name="btn_return_at_menu">Return to menu</string>
+    <string name="et_hint_your_name">Your name</string>
+    <string name="tv_dialog_congrats">Your score is excellent !   Please get your name for save it.</string>
+    <string name="btn_dialog_ok">OK</string>
+</resources>

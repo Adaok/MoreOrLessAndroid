@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameActivity"
+    android:layout_margin="10dp">
+
+    <EditText
+        android:id="@+id/et_game_aty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Enter a number" />
+
+    <Button
+        android:id="@+id/btn_submit_game_aty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_below="@+id/et_game_aty"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/tv_game_aty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="You win in 5 try."
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_below="@+id/btn_submit_game_aty"/>
+
+</RelativeLayout>
