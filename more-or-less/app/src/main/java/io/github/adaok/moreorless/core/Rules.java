@@ -34,8 +34,15 @@ public class Rules {
      */
     public Result getResultInComparaison(int result, int submit) {
         Log.d(TAG, "getResultInComparaison: ");
-        // TODO: 2019-09-30 use ResultEnum class for this return.
+        if (result == submit) {
+            return Result.OK;
+        } else if (result < submit) {
+            return Result.LESS;
+        } else if (result > submit) {
+            return Result.MORE;
+        }
 
+        return Result.OK; //never happen
     }
 
     public int getRandomNumber(int maxInt) {
@@ -55,11 +62,16 @@ public class Rules {
         Log.d(TAG, "checkIfScoreCanBeSaved: ");
         List<Score> scoreList = GamePreferences.getInstance(context).getScores();
 
-        // TODO: 2019-09-30 check first if all scores input are occupied
-        //for this, check field in Constants class.
+        if (scoreList.size() < Constants.LIMIT_SCORE_SAVED) {
+            return true;
+        }
 
-        // TODO: 2019-09-30 second part. Check all scores in scoreList object for see
-        //if the nbMoves is inferior to a score saved. if it's the case, return true.
+        for (Score score : scoreList) {
+            if (score.getNbMoves() > nbMoves) {
+                return true;
+            }
+        }
 
+        return false;
     }
 }

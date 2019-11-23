@@ -8,7 +8,10 @@ public class Score {
     private int mNbMoves;
 
     public Score(String gamerName, int nbMoves) {
-        // TODO: 2019-09-30 Add security on set mNbMoves attribute.
+        mGamerName = gamerName;
+        if (nbMoves > 0) {
+            mNbMoves = nbMoves;
+        }
     }
 
     public String getGamerName() {
@@ -24,6 +27,8 @@ public class Score {
     }
 
     public void setNbMoves(int nbMoves) {
-        // TODO: 2019-09-30 Add security on set mNbMoves attribute.
+        if (nbMoves > 0) {
+            mNbMoves = nbMoves;
+        }
     }
 }
